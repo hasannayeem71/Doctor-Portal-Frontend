@@ -46,7 +46,9 @@ const AppointmentBanner = () => {
               perferendis quia laudantium rerum, voluptates accusantium delectus
               exercitationem amet eos quos!
             </Typography>
-            <Button variant="contained">Learn More</Button>
+            <Button variant="contained" style={{ backgroundColor: "#5CE7ED" }}>
+              Learn More
+            </Button>
           </Box>
         </Grid>
       </Grid>
