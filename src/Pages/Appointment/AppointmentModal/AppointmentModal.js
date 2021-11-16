@@ -5,8 +5,9 @@ import Fade from "@mui/material/Fade";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import React from "react";
-
+import axios from "axios";
+import React, { useState } from "react";
+import useAuth from "../../../hooks/useAuth";
 const style = {
   position: "absolute",
   top: "50%",
@@ -25,13 +26,45 @@ const AppointmentModal = ({
   handleModalClose,
   availableAppointment,
   date,
+  setBookingSuccess,
 }) => {
+  const { user } = useAuth();
+
+  const initialInfo = {
+    patientName: user.displayName,
+    email: user.email,
+    phone: "",
+  };
+  const [bookingInfo, setBookingInfo] = useState(initialInfo);
   const { name, time } = availableAppointment;
   const handleBookSubmit = (e) => {
-    //collect data from the from and submit to database today
     e.preventDefault();
+    //collect data
+    const appointment = {
+      ...bookingInfo,
+      time,
+      serviceName: name,
+      date: date.toLocaleDateString(),
+    };
+    //send to server
+    axios
+      .post("https://doctorportalx.herokuapp.com/appointments", appointment)
+      .then((res) => {
+        if (res.data.acknowledged) {
+          setBookingSuccess(true);
+        }
+      });
     handleModalClose();
   };
+  const handleOnBlur = (e) => {
+    const field = e.target.name;
+    const value = e.target.value;
+    const newInfo = { ...bookingInfo };
+    newInfo[field] = value;
+
+    setBookingInfo(newInfo);
+  };
+
   return (
     <div>
       <Modal
@@ -60,23 +93,29 @@ const AppointmentModal = ({
               />
               <TextField
                 sx={{ width: "95%", m: 1 }}
-                label="Your Name"
+                label="Name"
+                name="patientName"
+                defaultValue={user.displayName}
                 id="outlined-size-small"
                 size="small"
+                onBlur={handleOnBlur}
               />
               <TextField
                 sx={{ width: "95%", m: 1 }}
                 label="Phone Number"
+                name="phone"
                 id="outlined-size-small"
                 size="small"
+                onBlur={handleOnBlur}
               />
               <TextField
                 sx={{ width: "95%", m: 1 }}
                 label="Email"
+                name="email"
                 id="outlined-size-small"
-                // defaultValue={time}
-                disabled
+                defaultValue={user.email}
                 size="small"
+                onBlur={handleOnBlur}
               />
               <TextField
                 sx={{ width: "95%", m: 1 }}

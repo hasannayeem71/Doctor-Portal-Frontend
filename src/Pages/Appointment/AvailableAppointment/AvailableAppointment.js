@@ -2,7 +2,11 @@ import { Button, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 
-const AvailableAppointment = ({ availableAppointment, date }) => {
+const AvailableAppointment = ({
+  availableAppointment,
+  date,
+  setBookingSuccess,
+}) => {
   const { name, time, space } = availableAppointment;
   const [openBooking, setOpenBooking] = useState(false);
   const handleModalOpen = () => setOpenBooking(true);
@@ -29,6 +33,7 @@ const AvailableAppointment = ({ availableAppointment, date }) => {
         openBooking={openBooking}
         handleModalClose={handleModalClose}
         date={date}
+        setBookingSuccess={setBookingSuccess}
       />
     </>
   );
