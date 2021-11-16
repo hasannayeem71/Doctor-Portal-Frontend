@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 
 const UserAppointments = ({ date }) => {
@@ -39,11 +40,15 @@ const UserAppointments = ({ date }) => {
               <TableRow
                 key={appointment._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="right">
                   {appointment?.patientName}
                 </TableCell>
                 <TableCell align="right">{appointment?.time}</TableCell>
                 <TableCell align="right">{appointment?.serviceName}</TableCell>
+                <TableCell align="right">{appointment.payment? 'Paid':
+                <Link to={`/dashboard/payment/${appointment._id}`}><button>Pay</button></Link>
+                }</TableCell>
+
               </TableRow>
             ))}
           </TableBody>
